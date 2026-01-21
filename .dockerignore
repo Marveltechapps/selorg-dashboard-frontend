@@ -1,0 +1,46 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+.pnp
+.pnp.js
+
+# Build output (will be built inside container)
+dist
+build
+
+# Testing
+coverage
+.nyc_output
+tests
+*.test.ts
+*.spec.ts
+playwright-report
+test-results
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Documentation
+*.md
+!README.md
+
+# Playwright
+playwright.config.ts

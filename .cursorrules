@@ -1,0 +1,80 @@
+# Cursor Rules for Dashboard Project
+
+## Routing Pattern
+- **CRITICAL**: This project uses **state-based routing**, NOT React Router
+- **NEVER** use `react-router-dom`, `useNavigate`, `BrowserRouter`, `Routes`, or `Route`
+- **ALWAYS** use props to pass `setActiveTab` function to child components
+- Navigation should be done via `setActiveTab(tabName)` where `tabName` matches the activeTab state
+
+## Import Path Rules
+- **ALWAYS** use relative paths for imports within the project
+- **NEVER** use absolute paths starting with `/src/` or `src/`
+- Use relative paths like `'./screens/ComponentName'` or `'../components/ComponentName'`
+- Path aliases like `@/` are allowed but prefer relative paths for clarity
+
+## Component Structure
+- Dashboard management components (e.g., `DarkstoreManagement.tsx`) should:
+  - Accept `onLogout` prop
+  - Use `useState` for `activeTab` management
+  - Pass `setActiveTab` to child components that need navigation
+  - Use conditional rendering based on `activeTab` state
+
+## Screen Components
+- Screen components should:
+  - Accept optional `setActiveTab?: (tab: string) => void` prop if they need navigation
+  - Use `setActiveTab('tabname')` instead of `navigate('/path')`
+  - **NEVER** import or use React Router hooks
+
+## File Organization
+- Components in `src/components/` folder
+- Screens in `src/components/screens/` folder
+- Dashboard-specific screens in `src/components/screens/{dashboard}/` folder
+- Shared UI components in `src/components/ui/` folder
+
+## Common Mistakes to Avoid
+1. ❌ `import { useNavigate } from 'react-router-dom'`
+2. ❌ `const navigate = useNavigate(); navigate('/path')`
+3. ❌ `import Component from '/src/components/Component'`
+4. ❌ `import Component from 'src/components/Component'`
+5. ✅ `import Component from './screens/Component'`
+6. ✅ `setActiveTab('tabname')` for navigation
+
+## Example Correct Pattern
+```typescript
+// Parent Component (DarkstoreManagement.tsx)
+export function DarkstoreManagement({ onLogout }: { onLogout: () => void }) {
+  const [activeTab, setActiveTab] = useState('overview');
+  
+  return (
+    <>
+      {activeTab === 'overview' && <DashboardHome setActiveTab={setActiveTab} />}
+      {activeTab === 'liveorders' && <LiveOrders />}
+    </>
+  );
+}
+
+// Child Component (DashboardHome.tsx)
+interface DashboardHomeProps {
+  setActiveTab?: (tab: string) => void;
+}
+
+export function DashboardHome({ setActiveTab }: DashboardHomeProps = {}) {
+  const handleNavigate = (tab: string) => {
+    if (setActiveTab) {
+      setActiveTab(tab);
+    }
+  };
+  
+  return (
+    <button onClick={() => handleNavigate('liveorders')}>
+      View All Orders
+    </button>
+  );
+}
+```
+
+## Error Prevention
+- Before adding React Router imports, check if the project uses state-based routing
+- Before using absolute paths, check if relative paths work
+- Always verify component props match the parent's state management pattern
+- Test navigation works with `setActiveTab` instead of `navigate`
